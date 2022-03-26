@@ -1,0 +1,62 @@
+#Mohammad Fakhruddin Babar
+#M564K763
+#dictionary Attack with common word
+#CS656, Lab-1, Task-4
+
+from Crypto.Cipher import AES
+from Crypto.Util import Padding
+
+#given plaintext cipher text and iv
+plaintext=b"I will crack the key."
+#print(plaintext)
+cipher_text="673ff1376c5b9a2e7cdbd7daf1faeb180bfa2b7ab150e25b7915525500a045fa"
+iv='0f0e0d0c0b0a00908070605040302010'
+
+#converting iv and ciphertext 
+iv=bytes.fromhex(iv)
+cipher_text=bytes.fromhex(cipher_text)
+
+# Reading the wordlist file 
+fp=open("task4_wordlist.txt","r")
+#accessing the word line-wise
+wordlist_linewise=fp.readlines()
+fp.close()
+
+for word in wordlist_linewise:
+    #print(len(word))
+    #replacing new line with space ; then padding with #
+    word=word.replace("\n","")
+    if len(word) <= 16:
+        n=16-len(word)
+        key=word+'#'*n
+       # print(key)
+        key=key.encode("ascii")
+        #print(key)
+    # creating the AES cipher
+    mode=AES.MODE_CBC
+    cipher=AES.new(key,mode,iv)
+    # encrypt the plaintext with padding 
+    cipher_text_new=cipher.encrypt(Padding.pad(plaintext,16))
+    l=0;
+    if cipher_text ==cipher_text_new:
+        key=word
+        l=1
+        print("Key is found and key is:",word)
+        break
+
+#if key is not in the given list
+if(l==0):
+    print("Key is not found in given wordlist")
+
+ 
+    
+    
+
+        
+    
+
+
+
+
+
+
